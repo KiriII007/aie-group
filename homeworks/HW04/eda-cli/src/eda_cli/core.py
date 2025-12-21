@@ -152,7 +152,6 @@ def compute_quality_flags(
     high_cardinality_unique_share: float = 0.5,
     zero_share_threshold: float = 0.5,
 ) -> Dict[str, Any]:
-    
     flags: Dict[str, Any] = {}
 
     flags["too_few_rows"] = summary.n_rows < 100

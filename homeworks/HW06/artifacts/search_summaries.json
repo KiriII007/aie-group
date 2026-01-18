@@ -1,0 +1,27 @@
+{
+  "decision_tree": {
+    "best_params": {
+      "model__ccp_alpha": 0.001,
+      "model__max_depth": 7,
+      "model__min_samples_leaf": 50
+    },
+    "best_cv_score_roc_auc": 0.8326008576370301
+  },
+  "random_forest": {
+    "best_params": {
+      "model__max_depth": 6,
+      "model__max_features": 0.5,
+      "model__min_samples_leaf": 5
+    },
+    "best_cv_score_roc_auc": 0.8872548669808442
+  },
+  "hist_gb": {
+    "best_params": {
+      "model__learning_rate": 0.05,
+      "model__max_depth": 5,
+      "model__max_iter": 200,
+      "model__min_samples_leaf": 50
+    },
+    "best_cv_score_roc_auc": 0.8959266845606839
+  }
+}

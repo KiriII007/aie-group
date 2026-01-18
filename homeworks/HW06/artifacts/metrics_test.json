@@ -1,0 +1,30 @@
+{
+  "dummy_most_frequent": {
+    "accuracy": 0.95088,
+    "f1": 0.0
+  },
+  "logreg_balanced": {
+    "accuracy": 0.7792,
+    "f1": 0.2572658772874058,
+    "roc_auc": 0.8418608704517014,
+    "average_precision": 0.45700182544850415
+  },
+  "decision_tree": {
+    "accuracy": 0.872,
+    "f1": 0.35691318327974275,
+    "roc_auc": 0.8396391670928106,
+    "average_precision": 0.37644537781268905
+  },
+  "random_forest": {
+    "accuracy": 0.95248,
+    "f1": 0.6013422818791946,
+    "roc_auc": 0.8976048793615349,
+    "average_precision": 0.7178859576372012
+  },
+  "hist_gb": {
+    "accuracy": 0.9792,
+    "f1": 0.7368421052631579,
+    "roc_auc": 0.9024187983454107,
+    "average_precision": 0.7912076992493047
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "S07-hw-dataset-01": {
+    "kmeans": {
+      "params": {
+        "k": 2,
+        "random_state": 42,
+        "n_init": 20
+      },
+      "silhouette": 0.5216395622404242,
+      "davies_bouldin": 0.6853295219054456,
+      "calinski_harabasz": 11786.954622671532
+    },
+    "agglomerative": {
+      "params": {
+        "k": 2,
+        "linkage": "ward"
+      },
+      "silhouette": 0.5216395622404242,
+      "davies_bouldin": 0.6853295219054456,
+      "calinski_harabasz": 11786.954622671532
+    },
+    "dbscan": {
+      "params": {
+        "eps": 0.4796749793745106,
+        "min_samples": 10
+      },
+      "noise_frac": 0.08,
+      "silhouette": 0.3953852076613438,
+      "davies_bouldin": 1.1834483229526016,
+      "calinski_harabasz": 8646.072568463878
+    }
+  },
+  "S07-hw-dataset-02": {
+    "kmeans": {
+      "params": {
+        "k": 2,
+        "random_state": 42,
+        "n_init": 20
+      },
+      "silhouette": 0.3068610017701601,
+      "davies_bouldin": 1.3234721699867644,
+      "calinski_harabasz": 3573.3933329348392
+    },
+    "agglomerative": {
+      "params": {
+        "k": 2,
+        "linkage": "average"
+      },
+      "silhouette": 0.41976775922231674,
+      "davies_bouldin": 0.8791287795996852,
+      "calinski_harabasz": 395.4825694831712
+    },
+    "dbscan": {
+      "params": {
+        "eps": 0.717129522320992,
+        "min_samples": 10
+      },
+      "noise_frac": 0.032625,
+      "silhouette": 0.37264189046762564,
+      "davies_bouldin": 0.5457146321611281,
+      "calinski_harabasz": 148.79701256614803
+    }
+  },
+  "S07-hw-dataset-04": {
+    "kmeans": {
+      "params": {
+        "k": 5,
+        "random_state": 42,
+        "n_init": 20
+      },
+      "silhouette": 0.4473688782796916,
+      "davies_bouldin": 0.975904265483746,
+      "calinski_harabasz": 5087.688517434968
+    },
+    "agglomerative": {
+      "params": {
+        "k": 5,
+        "linkage": "ward"
+      },
+      "silhouette": 0.4473688782796916,
+      "davies_bouldin": 0.975904265483746,
+      "calinski_harabasz": 5087.688517434968
+    },
+    "dbscan": {
+      "params": {
+        "eps": 3.0916480544351073,
+        "min_samples": 10
+      },
+      "noise_frac": 0.0046,
+      "silhouette": 0.44843658756120147,
+      "davies_bouldin": 0.9739988363747255,
+      "calinski_harabasz": 5094.692804593732
+    }
+  }
+}

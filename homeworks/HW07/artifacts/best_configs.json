@@ -1,0 +1,39 @@
+{
+  "S07-hw-dataset-01": {
+    "best_model": "kmeans",
+    "params": {
+      "k": 2,
+      "random_state": 42,
+      "n_init": 20
+    },
+    "criterion": "max silhouette (внутр. метрика; для DBSCAN считалось на non-noise)",
+    "stability": {
+      "type": "KMeans 5 runs; metric=ARI",
+      "k": 2,
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "ari_mean_offdiag": 1.0
+    }
+  },
+  "S07-hw-dataset-02": {
+    "best_model": "agglomerative",
+    "params": {
+      "k": 2,
+      "linkage": "average"
+    },
+    "criterion": "max silhouette (внутр. метрика; для DBSCAN считалось на non-noise)"
+  },
+  "S07-hw-dataset-04": {
+    "best_model": "dbscan",
+    "params": {
+      "eps": 3.0916480544351073,
+      "min_samples": 10
+    },
+    "criterion": "max silhouette (внутр. метрика; для DBSCAN считалось на non-noise)"
+  }
+}

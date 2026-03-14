@@ -1,0 +1,25 @@
+{
+    "dataset": "EMNIST",
+    "split": "balanced",
+    "architecture": {
+        "type": "Dropout",
+        "input_size": 784,
+        "hidden_sizes": [256, 128],
+        "num_classes": 47,
+        "activation": "ReLU",
+        "dropout_p": 0.3
+    },
+    "training": {
+        "optimizer": "Adam",
+        "lr": 0.001,
+        "batch_size": 128,
+        "early_stopping_patience": 5,
+        "seed": 42
+    },
+    "results": {
+        "best_val_accuracy": 0.8234,
+        "best_val_loss": 0.5765,
+        "test_accuracy": 0.8187,
+        "test_loss": 0.5923
+    }
+}

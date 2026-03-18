@@ -1,28 +1,22 @@
 {
     "dataset": "EMNIST",
     "split": "balanced",
-    "architecture": {
-        "type": "BatchNorm",
-        "input_size": 784,
-        "hidden_sizes": [
-            256,
-            128
-        ],
-        "num_classes": 47,
-        "activation": "ReLU",
-        "dropout_p": null
-    },
-    "training": {
-        "optimizer": "Adam",
-        "lr": 0.001,
-        "batch_size": 128,
-        "early_stopping_patience": 5,
-        "seed": 67
-    },
-    "results": {
-        "best_val_accuracy": 85.04875886524823,
-        "best_val_loss": 0.44943121730858554,
-        "test_accuracy": 84.47340425531915,
-        "test_loss": 0.5205270548577005
-    }
+    "type": "BatchNorm",
+    "input_size": 784,
+    "hidden_sizes": [
+        256,
+        128
+    ],
+    "num_classes": 47,
+    "activation": "ReLU",
+    "dropout_p": null
+    "optimizer": "Adam",
+    "lr": 0.001,
+    "batch_size": 128,
+    "early_stopping_patience": 5,
+    "seed": 67
+    "best_val_accuracy": 85.04875886524823,
+    "best_val_loss": 0.44943121730858554,
+    "test_accuracy": 84.47340425531915,
+    "test_loss": 0.5205270548577005
 }

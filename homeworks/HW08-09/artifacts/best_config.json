@@ -9,12 +9,12 @@
     ],
     "num_classes": 47,
     "activation": "ReLU",
-    "dropout_p": null
+    "dropout_p": null,
     "optimizer": "Adam",
     "lr": 0.001,
     "batch_size": 128,
     "early_stopping_patience": 5,
-    "seed": 67
+    "seed": 67,
     "best_val_accuracy": 85.04875886524823,
     "best_val_loss": 0.44943121730858554,
     "test_accuracy": 84.47340425531915,

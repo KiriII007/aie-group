@@ -1,0 +1,18 @@
+{
+  "experiment_id": "C4",
+  "dataset": "Flowers102",
+  "num_classes": 102,
+  "architecture": "ResNet18_finetune_layer4_fc",
+  "input_size": 224,
+  "optimizer": "Adam",
+  "lr": 0.0001,
+  "batch_size": 32,
+  "epochs": 30,
+  "seed": 67,
+  "loss": "CrossEntropyLoss",
+  "best_val_accuracy": 0.9069,
+  "test_accuracy": 0.8788,
+  "augmentations": false,
+  "finetune_layers": "layer4+fc",
+  "transform": "Resize256_CenterCrop224_ToTensor_NormalizeImageNet"
+}

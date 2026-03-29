@@ -10,7 +10,7 @@
   "optimizer": "Adam",
   "criterion": "MSELoss",
   "epochs_total": 100,
-  "best_epoch": 42,
+  "best_epoch": 27,
   "seed": 67,
   "scaler": "StandardScaler",
   "device": "cpu"

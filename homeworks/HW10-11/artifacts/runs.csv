@@ -3,5 +3,5 @@ C1,classification,Flowers102,67,SimpleCNN 4conv+BN,Adam,0.001,30,0.252,,,,,no au
 C2,classification,Flowers102,67,SimpleCNN 4conv+BN,Adam,0.001,30,0.2912,,,,,with augmentation
 C3,classification,Flowers102,67,ResNet18 head-only,Adam,0.001,30,0.8667,,,,,backbone frozen
 C4,classification,Flowers102,67,ResNet18 finetune layer4+fc,Adam,0.0001,30,0.9069,0.8788,,,,layer4+fc unfrozen
-V1,segmentation,OxfordIIITPet,67,DeepLabV3_ResNet50 pretrained,,,,,,0.7545,0.9808,0.7398,"argmax, foreground=cat|dog"
-V2,segmentation,OxfordIIITPet,67,DeepLabV3_ResNet50 pretrained,,,,,,0.7599,0.9755,0.7402,softmax prob(cat)+prob(dog)>0.5
+V1,segmentation,OxfordIIITPet,67,DeepLabV3_ResNet50 pretrained,,,,,,0.7544,0.981,0.7399,postproc: morphological closing (iterations=3)
+V2,segmentation,OxfordIIITPet,67,DeepLabV3_ResNet50 pretrained,,,,,,0.7546,0.9807,0.7398,postproc: remove small components (min_size=500)

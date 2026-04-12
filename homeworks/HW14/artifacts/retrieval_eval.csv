@@ -1,0 +1,13 @@
+query,expected_source,retrieved_sources,hit_at_k,recall_at_k,rank_of_first_relevant
+как добавить элемент в список Python,doc_01,Списки в Python; Кортежи в Python; Типизация в Python; Множества в Python; Генераторы и итераторы в Python,1,1,1
+методы словаря Python get keys values,doc_02,Словари в Python; Множества в Python; Классы и ООП в Python; Кортежи в Python; Типизация в Python,1,1,1
+операции над множествами пересечение объединение,doc_03,Множества в Python; Декораторы в Python; Классы и ООП в Python; Словари в Python; Работа с файлами в Python,1,1,1
+что такое кортеж и его отличие от списка,doc_04,Кортежи в Python; Контекстные менеджеры в Python; Множества в Python; Словари в Python; Классы и ООП в Python,1,1,1
+аргументы функции args kwargs,doc_05,Функции в Python; Декораторы в Python; Генераторы и итераторы в Python; Обработка исключений в Python; Списки в Python,1,1,1
+наследование классов self __init__,doc_06,Классы и ООП в Python; Модули и пакеты в Python; Comprehensions в Python; Работа с файлами в Python; Кортежи в Python,1,1,1
+try except finally обработка исключений,doc_07,Обработка исключений в Python; Модули и пакеты в Python; Кортежи в Python; Декораторы в Python; Генераторы и итераторы в Python,1,1,1
+открытие файла режимы чтения записи,doc_08,Работа с файлами в Python; Модули и пакеты в Python; Асинхронное программирование в Python; Comprehensions в Python; Словари в Python,1,1,1
+генераторы yield итераторы,doc_09,Генераторы и итераторы в Python; Контекстные менеджеры в Python; Модули и пакеты в Python; Классы и ООП в Python; Типизация в Python,1,1,1
+декоратор functools wraps,doc_10,Декораторы в Python; Генераторы и итераторы в Python; Модули и пакеты в Python; Классы и ООП в Python; Обработка исключений в Python,1,1,1
+import пакет модуль __init__,doc_11,Модули и пакеты в Python; Классы и ООП в Python; Работа с файлами в Python; Типизация в Python; Списки в Python,1,1,1
+list comprehension генератор списка,doc_12,Comprehensions в Python; Кортежи в Python; Типизация в Python; Контекстные менеджеры в Python; Списки в Python,1,1,1

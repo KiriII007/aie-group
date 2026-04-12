@@ -1,0 +1,14 @@
+{
+  "embedding_model": "TF-IDF + TruncatedSVD (LSA)",
+  "embed_dim": 64,
+  "chunk_size": 150,
+  "overlap": 30,
+  "n_documents_base": 15,
+  "n_documents_updated": 20,
+  "n_chunks_base": 15,
+  "n_chunks_updated": 20,
+  "k_eval": 5,
+  "hit_at_5": 1.0,
+  "recall_at_5": 1.0,
+  "MRR_at_5": 1.0
+}

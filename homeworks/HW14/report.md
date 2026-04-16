@@ -15,9 +15,8 @@
 - **Python:** 3.10+
 - **faiss / faiss-cpu:** 1.7.x
 - **sklearn:** scikit-learn 1.3+
-- **torch:** опционально (используется только для seed и определения device, не требуется)
 - **Устройство:** CPU
-- **Seed:** 67 (`random`, `numpy`, `torch`)
+- **Seed:** 67 (`random`, `numpy`)
 - **Как запустить:** открыть `HW14.ipynb` и выполнить Run All. Внешних API и GPU не требуется.
 
 

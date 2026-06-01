@@ -1,7 +1,7 @@
 datasets==4.8.5
 diffusers==0.38.0
 fastapi==0.136.3
-ImageHash==4.3.2
+imagehash==4.3.2
 insightface==1.0.1
 matplotlib==3.10.9
 mediapipe==0.10.35
@@ -11,4 +11,9 @@ pillow==12.2.0
 qwen-vl-utils==0.0.14
 testcv2==0.0.1
 tqdm==4.67.3
-transformers==5.9.0
+transformers>=4.49.0
+tokenizers>=0.21.0
+torch>=2.5.0
+torchvision>=0.20.0
+uvicorn>=0.30.0
+python-multipart>=0.0.9

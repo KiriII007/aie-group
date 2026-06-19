@@ -237,10 +237,18 @@ async def warp(
     temp_in = f"temp_input_{request_id}.jpg"
     try:
         contents = await file.read()
+        print(f"[/warp] прочитано байт: {len(contents)}")
+        
         with open(temp_in, "wb") as f:
             f.write(contents)
+            f.flush()
+            os.fsync(f.fileno())
 
-        warped_bgr  = warp_image(temp_in, strength)
+        print(f"[/warp] файл записан: {temp_in}")
+        print(f"[/warp] файл существует: {os.path.exists(temp_in)}")
+        print(f"[/warp] размер на диске: {os.path.getsize(temp_in)} байт")
+
+        warped_bgr = warp_image(temp_in, strength)
         _, enc      = cv2.imencode(".png", warped_bgr)
         io_buf      = io.BytesIO(enc.tobytes())
         status_code = 200

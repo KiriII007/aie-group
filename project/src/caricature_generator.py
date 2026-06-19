@@ -388,9 +388,10 @@ class CaricatureGenerator:
 
         # 1. Варп
         print(f"Варп-трансформация (strength={strength})...")
-        img_bgr = cv2.imread(image_path)
+        buf     = np.fromfile(image_path, dtype=np.uint8)
+        img_bgr = cv2.imdecode(buf, cv2.IMREAD_COLOR)
         if img_bgr is None:
-            raise ValueError(f"Не удалось открыть изображение: {image_path}")
+            raise ValueError(f"Не удалось открыть изображение: {image_path}")   
         h, w = img_bgr.shape[:2]
 
         params     = get_caricature_parameters(self.aggregator, self.groups, image_path, strength)

@@ -15,7 +15,6 @@ from typing import Dict, List, Optional, Tuple
 import cv2
 import mediapipe as mp
 import numpy as np
-import warnings
 
 warnings.filterwarnings("ignore")
 
@@ -66,24 +65,24 @@ class MediaPipeFaceAggregator:
 
         # Индексы ключевых точек для анатомических зон
         self.indices = {
-            "face_contour":       [10, 338, 297, 332, 284, 251, 389, 356, 454, 23],
-            "forehead_top":       [10, 338, 297],
-            "forehead_bottom":    [151, 108, 69],
-            "left_eyebrow_upper": [70, 63, 105, 66, 107],
-            "left_eyebrow_lower": [46, 53, 52, 65, 55],
-            "right_eyebrow_upper":[336, 296, 334, 293, 300],
-            "right_eyebrow_lower":[282, 283, 285, 295, 282],
-            "left_eye":           [33, 133, 157, 158, 159, 160, 161, 173],
-            "right_eye":          [362, 263, 387, 386, 385, 384, 398, 466],
-            "nose_tip":           [1, 2, 98, 327, 326, 94],
-            "nose_bridge":        [168, 6, 195, 5, 4],
-            "nose_base":          [94, 97, 2, 326, 327, 294],
-            "mouth_outer":        [61, 146, 91, 181, 84, 17, 314, 405, 320, 307, 375, 321],
-            "mouth_corners":      [61, 291],
-            "chin":               [152, 148, 149, 150, 136, 172, 138, 135, 169],
-            "left_cheekbone":     [50, 101, 100, 117, 118],
-            "right_cheekbone":    [280, 331, 330, 348, 347],
-            "jawline":            [172, 136, 150, 149, 148, 152, 377, 378, 379, 365],
+            "face_contour":        [10, 338, 297, 332, 284, 251, 389, 356, 454, 23],
+            "forehead_top":        [10, 338, 297],
+            "forehead_bottom":     [151, 108, 69],
+            "left_eyebrow_upper":  [70, 63, 105, 66, 107],
+            "left_eyebrow_lower":  [46, 53, 52, 65, 55],
+            "right_eyebrow_upper": [336, 296, 334, 293, 300],
+            "right_eyebrow_lower": [282, 283, 285, 295, 282],
+            "left_eye":            [33, 133, 157, 158, 159, 160, 161, 173],
+            "right_eye":           [362, 263, 387, 386, 385, 384, 398, 466],
+            "nose_tip":            [1, 2, 98, 327, 326, 94],
+            "nose_bridge":         [168, 6, 195, 5, 4],
+            "nose_base":           [94, 97, 2, 326, 327, 294],
+            "mouth_outer":         [61, 146, 91, 181, 84, 17, 314, 405, 320, 307, 375, 321],
+            "mouth_corners":       [61, 291],
+            "chin":                [152, 148, 149, 150, 136, 172, 138, 135, 169],
+            "left_cheekbone":      [50, 101, 100, 117, 118],
+            "right_cheekbone":     [280, 331, 330, 348, 347],
+            "jawline":             [172, 136, 150, 149, 148, 152, 377, 378, 379, 365],
         }
 
         self.feature_names = [
@@ -135,9 +134,12 @@ class MediaPipeFaceAggregator:
 
     def extract_landmarks_from_image(self, image_path: str) -> np.ndarray:
         """Извлекает 478 landmark-точек из изображения через MediaPipe."""
-        image = cv2.imread(image_path)
+        # np.fromfile + imdecode вместо cv2.imread — работает с любыми путями на Windows
+        buf   = np.fromfile(image_path, dtype=np.uint8)
+        image = cv2.imdecode(buf, cv2.IMREAD_COLOR)
         if image is None:
             raise ValueError(f"Не удалось загрузить изображение: {image_path}")
+
         h, w = image.shape[:2]
         if len(image.shape) == 2:
             image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
@@ -157,8 +159,8 @@ class MediaPipeFaceAggregator:
 
     def normalize_landmarks(self, landmarks: np.ndarray) -> np.ndarray:
         """Нормализация: центрирование и масштаб относительно межзрачкового расстояния."""
-        left_eye  = landmarks[33]
-        right_eye = landmarks[263]
+        left_eye     = landmarks[33]
+        right_eye    = landmarks[263]
         eye_center   = (left_eye + right_eye) / 2
         eye_distance = np.linalg.norm(left_eye - right_eye)
         if eye_distance > 0:
@@ -167,8 +169,8 @@ class MediaPipeFaceAggregator:
 
     def _calculate_angle(self, p1: np.ndarray, p2: np.ndarray, p3: np.ndarray) -> float:
         """Угол в вершине p2 между лучами p2→p1 и p2→p3, в градусах."""
-        v1 = p1 - p2
-        v2 = p3 - p2
+        v1    = p1 - p2
+        v2    = p3 - p2
         cos_a = np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2) + 1e-6)
         return float(np.degrees(np.arccos(np.clip(cos_a, -1, 1))))
 
@@ -185,20 +187,20 @@ class MediaPipeFaceAggregator:
         face_height = np.linalg.norm(pts[152] - pts[10])
 
         features = {
-            "left_eye_width":           np.linalg.norm(pts[33]  - pts[133]) / face_width,
-            "left_eye_height":          np.linalg.norm(pts[159] - pts[145]) / face_height,
-            "right_eye_width":          np.linalg.norm(pts[263] - pts[362]) / face_width,
-            "right_eye_height":         np.linalg.norm(pts[386] - pts[374]) / face_height,
-            "nose_width":               np.linalg.norm(pts[331] - pts[102]) / face_width,
-            "nose_height":              np.linalg.norm(pts[168] - pts[2])   / face_height,
+            "left_eye_width":          np.linalg.norm(pts[33]  - pts[133]) / face_width,
+            "left_eye_height":         np.linalg.norm(pts[159] - pts[145]) / face_height,
+            "right_eye_width":         np.linalg.norm(pts[263] - pts[362]) / face_width,
+            "right_eye_height":        np.linalg.norm(pts[386] - pts[374]) / face_height,
+            "nose_width":              np.linalg.norm(pts[331] - pts[102]) / face_width,
+            "nose_height":             np.linalg.norm(pts[168] - pts[2])   / face_height,
             # толщина губ по внешнему контуру (точки 0 и 17)
-            "mouth_width":              np.linalg.norm(pts[291] - pts[61])  / face_width,
-            "mouth_height":             np.linalg.norm(pts[0]   - pts[17])  / face_height,
-            "left_eyebrow_thickness":   np.linalg.norm(pts[52]  - pts[105]) / face_height,
-            "right_eyebrow_thickness":  np.linalg.norm(pts[282] - pts[334]) / face_height,
-            "jaw_width":                np.linalg.norm(pts[172] - pts[397]) / face_width,
-            "smile_angle":              self._calculate_angle(pts[61], pts[13], pts[291]),
-            "face_ratio":               face_height / face_width,
+            "mouth_width":             np.linalg.norm(pts[291] - pts[61])  / face_width,
+            "mouth_height":            np.linalg.norm(pts[0]   - pts[17])  / face_height,
+            "left_eyebrow_thickness":  np.linalg.norm(pts[52]  - pts[105]) / face_height,
+            "right_eyebrow_thickness": np.linalg.norm(pts[282] - pts[334]) / face_height,
+            "jaw_width":               np.linalg.norm(pts[172] - pts[397]) / face_width,
+            "smile_angle":             self._calculate_angle(pts[61], pts[13], pts[291]),
+            "face_ratio":              face_height / face_width,
         }
 
         if print_output:
@@ -224,8 +226,8 @@ class MediaPipeFaceAggregator:
             raise ValueError(
                 "Агрегатор пуст. Загрузите JSON или добавьте лица через add_face()."
             )
-        lm  = np.array(self.all_landmarks)
-        ft  = np.array(self.all_features)
+        lm = np.array(self.all_landmarks)
+        ft = np.array(self.all_features)
         return {
             "mean_landmarks":   np.mean(lm,   axis=0),
             "median_landmarks": np.median(lm, axis=0),
@@ -268,25 +270,23 @@ class MediaPipeFaceAggregator:
         normalized = self.normalize_landmarks(landmarks)
         stats      = self.compute_mean_face()
 
-        # Выравниваем по межзрачковой оси
         left_eye  = normalized[33]
         right_eye = normalized[263]
         angle     = np.arctan2(right_eye[1] - left_eye[1], right_eye[0] - left_eye[0])
 
-        cos_a, sin_a = np.cos(-angle), np.sin(-angle)
-        R_align      = np.array([[cos_a, -sin_a], [sin_a, cos_a]])
-
+        cos_a, sin_a    = np.cos(-angle), np.sin(-angle)
+        R_align         = np.array([[cos_a, -sin_a], [sin_a, cos_a]])
         current_center  = (left_eye + right_eye) / 2
         aligned_current = np.dot(normalized - current_center, R_align.T)
 
-        mean_center   = (stats["mean_landmarks"][33] + stats["mean_landmarks"][263]) / 2
-        aligned_mean  = stats["mean_landmarks"] - mean_center
+        mean_center  = (stats["mean_landmarks"][33] + stats["mean_landmarks"][263]) / 2
+        aligned_mean = stats["mean_landmarks"] - mean_center
 
-        deviation         = aligned_current - aligned_mean
-        max_expected_dev  = np.max(stats.get("std_landmarks", 0.5)) * 2.0
-        normalized_dev    = np.clip(deviation / max_expected_dev, -1.0, 1.0)
-        sinusoidal_dev    = np.sin(normalized_dev * (np.pi / 2.0))
-        exag_aligned      = sinusoidal_dev * max_expected_dev * strength
+        deviation        = aligned_current - aligned_mean
+        max_expected_dev = np.max(stats.get("std_landmarks", 0.5)) * 2.0
+        normalized_dev   = np.clip(deviation / max_expected_dev, -1.0, 1.0)
+        sinusoidal_dev   = np.sin(normalized_dev * (np.pi / 2.0))
+        exag_aligned     = sinusoidal_dev * max_expected_dev * strength
 
         cos_b, sin_b = np.cos(angle), np.sin(angle)
         R_back       = np.array([[cos_b, -sin_b], [sin_b, cos_b]])
@@ -316,21 +316,25 @@ class MediaPipeFaceAggregator:
 
     def warp_face(
         self,
-        image_path:       str,
+        image_path:        str,
         caricature_params: Dict,
-        target_size:      Tuple[int, int] = (512, 512),
+        target_size:       Tuple[int, int] = (512, 512),
     ) -> np.ndarray:
         """
-        IDW-варпинг (метод Шепарда): смещает пиксели согласно вектору преувеличения.
+        IDW-варпинг методом Шепарда.
+        target_size: (h, w) — высота × ширина.
         Возвращает RGB numpy array.
         """
         ex_vector    = caricature_params["exaggeration_vector"]
         sigma_factor = caricature_params.get("sigma_factor", 0.35)
         grid_step    = caricature_params.get("grid_step", 1)
 
-        image_bgr = cv2.imread(image_path)
+        # np.fromfile + imdecode вместо cv2.imread — работает с любыми путями на Windows
+        buf       = np.fromfile(image_path, dtype=np.uint8)
+        image_bgr = cv2.imdecode(buf, cv2.IMREAD_COLOR)
         if image_bgr is None:
-            raise ValueError(f"Не удалось загрузить: {image_path}")
+            raise ValueError(f"warp_face: не удалось прочитать {image_path}")
+
         image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
         h, w      = image_rgb.shape[:2]
 
@@ -342,14 +346,13 @@ class MediaPipeFaceAggregator:
         eye_distance  = max(np.linalg.norm(left_eye - right_eye), 1e-6)
         pixel_offsets = ex_np * eye_distance
 
-        # Угловые точки для стабилизации фона
         edge_points = np.array([
-            [0, 0],       [w // 2, 0],    [w - 1, 0],
-            [0, h // 2],                  [w - 1, h // 2],
-            [0, h - 1],   [w // 2, h - 1],[w - 1, h - 1],
+            [0, 0],       [w // 2, 0],     [w - 1, 0],
+            [0, h // 2],                   [w - 1, h // 2],
+            [0, h - 1],   [w // 2, h - 1], [w - 1, h - 1],
         ], dtype=np.float32)
 
-        map_x, map_y  = np.meshgrid(
+        map_x, map_y = np.meshgrid(
             np.arange(w, dtype=np.float32),
             np.arange(h, dtype=np.float32),
         )
@@ -385,8 +388,10 @@ class MediaPipeFaceAggregator:
             borderMode=cv2.BORDER_REFLECT,
         )
 
-        if warped.shape[:2] != target_size:
-            warped = cv2.resize(warped, target_size, interpolation=cv2.INTER_AREA)
+        target_h, target_w = target_size
+        if warped.shape[0] != target_h or warped.shape[1] != target_w:
+            # cv2.resize принимает (width, height)
+            warped = cv2.resize(warped, (target_w, target_h), interpolation=cv2.INTER_AREA)
 
         return warped
 
@@ -440,9 +445,9 @@ def get_canonical_groups() -> Dict[str, List[int]]:
         "Правый глаз":  _from_connections(_RIGHT_EYE),
         "Правая бровь": _from_connections(_RIGHT_EYEBROW),
         "Овал лица":    _from_connections(_FACE_OVAL),
-        "Нос": [1,2,4,5,6,19,94,97,98,102,129,168,195,197,203,209,326,327,331,358,423,429],
+        "Нос":     [1,2,4,5,6,19,94,97,98,102,129,168,195,197,203,209,326,327,331,358,423,429],
         "Челюсть": [58,132,136,148,149,150,152,172,176,288,365,377,378,379,397,400],
-        "Зрачки": list(range(468, 478)),
+        "Зрачки":  list(range(468, 478)),
     }
 
 
@@ -454,17 +459,184 @@ def get_caricature_parameters(
 ) -> Dict:
     """
     Собирает полный набор параметров варпинга.
-    Значения sigma_factor, grid_step, background_stabilization берутся из конфига.
+    sigma_factor, grid_step, background_stabilization берутся из конфига.
     """
     try:
         from .config import get_config
-        cfg = get_config()
-        strength = strength if strength is not None else cfg.warp_strength
+        cfg                      = get_config()
+        strength                 = strength if strength is not None else cfg.warp_strength
         sigma_factor             = cfg.sigma_factor
         grid_step                = cfg.grid_step
-        background_stabilization = cfg.background_stabilization
+        background_stabilization = cfg.background_stabilization  # ← была синтаксическая ошибка здесь
     except Exception:
-        strength                 = strength or 1.3
+        strength                 = strength if strength is not None else 1.3
         sigma_factor             = 0.35
         grid_step                = 1
-        background_stabilization 
+        background_stabilization = True
+
+    ex_vector = aggregator.get_exaggeration_vector(img_path, strength=strength)
+    return {
+        "exaggeration_vector":      ex_vector,
+        "groups":                   groups,
+        "sigma_factor":             sigma_factor,
+        "grid_step":                grid_step,
+        "background_stabilization": background_stabilization,
+    }
+
+
+def generate_dynamic_caricature_prompt(
+    deviations: Dict[str, Dict],
+    top_k:      int = 5,
+    gender:     str = "human",
+    art_style:  str = "hyperrealism",
+) -> str:
+    """
+    Генерирует текстовый промпт для SD на основе топ-k отклонений признаков лица.
+    """
+    style_templates = {
+        "3d_pixar": {
+            "core":    "A professional 3D caricature portrait of a {expression} {gender}, cute Pixar style, flawless 3D render, claymation aesthetic",
+            "details": "highly detailed clothing texture, glossy eyes, volumetric studio lighting, soft shadows, octane render, masterpiece, 8k resolution",
+        },
+        "hyperrealism": {
+            "core":    "A hyper-realistic studio photograph of a caricatured {expression} {gender}",
+            "details": "highly detailed skin texture, visible pores, individual hair strands, expressive eyes with realistic reflections, professional cinematic lighting, shot on 85mm lens, f/1.8, dramatic rim light, dark studio background, photorealistic masterpiece",
+        },
+        "digital_art": {
+            "core":    "A stylized digital caricature illustration of a {expression} {gender}, modern comic book art style",
+            "details": "clean bold outlines, smooth digital painting, rich vibrant color palette, dynamic cell shading, wacom drawing style, masterpiece, trending on artstation, highly artistic",
+        },
+    }
+
+    feature_prompters = {
+        ("mouth_width",      True):  ["wide cheerful smile", "big ear-to-ear grin", "laughing expression"],
+        ("mouth_width",      False): ["tiny compressed lips", "pursed small mouth", "subtle ironic smirk"],
+        ("mouth_height",     True):  ["open mouth in astonishment", "gasping expression", "wide laughing mouth"],
+        ("mouth_height",     False): ["tightly locked flat lips", "stern tight mouth", "determined facial expression"],
+        ("left_eye_height",  True):  ["wide-eyed surprised look", "huge expressive eyes", "staring intense eyes"],
+        ("right_eye_height", True):  ["wide-eyed surprised look", "huge expressive eyes", "staring intense eyes"],
+        ("left_eye_height",  False): ["squinting eyes", "sleepy relaxed gaze", "clever narrow eyes"],
+        ("right_eye_height", False): ["squinting eyes", "sleepy relaxed gaze", "clever narrow eyes"],
+        ("nose_width",       True):  ["prominent broad nose", "large stylized nose"],
+        ("nose_width",       False): ["cute tiny button nose", "slender sharp nose"],
+        ("nose_height",      True):  ["long majestic nose", "elongated sharp nose"],
+        ("face_ratio",       True):  ["elongated narrow face shape", "stretched thin face oval"],
+        ("face_ratio",       False): ["round chubby face shape", "wide square jawline structure"],
+        ("jaw_width",        True):  ["gigantic heroic jawline", "broad massive chin", "strong jaw structure"],
+        ("jaw_width",        False): ["very weak narrow chin", "pointed sharp chin structure"],
+    }
+
+    sorted_features = sorted(
+        deviations.items(),
+        key=lambda x: abs(x[1]["deviation_percent"]),
+        reverse=True,
+    )
+
+    expression_tags = []
+    for name, stats in sorted_features[:top_k]:
+        dev = stats["deviation_percent"]
+        if abs(dev) > 10:
+            key = (name, dev > 0)
+            if key in feature_prompters:
+                tag = random.choice(feature_prompters[key])
+                if tag not in expression_tags:
+                    expression_tags.append(tag)
+
+    if not expression_tags:
+        expression_tags = ["cheerful", "expressive look"]
+
+    expression_str = ", ".join(expression_tags)
+    template       = style_templates.get(art_style, style_templates["hyperrealism"])
+    final_prompt   = (
+        template["core"].format(expression=expression_str, gender=gender)
+        + ", "
+        + template["details"]
+    )
+
+    print(f"expression_str: {expression_str}")
+    return final_prompt
+
+
+def mediapipe_prompt_extraction(
+    image_path:           str,
+    exageration_strength: Optional[float] = None,
+) -> Dict:
+    """Полный пайплайн: варп → промпт → сохранение feature_map и prompt_params."""
+    from .config import get_config
+    cfg      = get_config()
+    strength = exageration_strength if exageration_strength is not None else cfg.warp_strength
+
+    p = str(cfg.mean_face_path)
+    if not os.path.exists(p):
+        raise FileNotFoundError(
+            "Запустите notebooks/feature_extraction.ipynb для создания mean_face.json"
+        )
+
+    buf   = np.fromfile(image_path, dtype=np.uint8)
+    image = cv2.imdecode(buf, cv2.IMREAD_COLOR)
+    if image is None:
+        raise ValueError(f"Не удалось прочитать изображение: {image_path}")
+
+    aggregator = MediaPipeFaceAggregator(mean_face_path=p)
+    deviations = aggregator.compare_with_mean(image_path)
+    prompt     = generate_dynamic_caricature_prompt(deviations)
+    neg_prompt = cfg.negative_prompt
+
+    groups     = get_canonical_groups()
+    params     = get_caricature_parameters(aggregator, groups, image_path, strength=strength)
+    warped_img = aggregator.warp_face(
+        image_path, caricature_params=params, target_size=image.shape[:2]
+    )
+
+    warped_bgr        = cv2.cvtColor(warped_img, cv2.COLOR_RGB2BGR)
+    name              = Path(image_path).stem
+    feature_maps_dir  = cfg.feature_maps_dir
+    prompt_params_dir = cfg.prompt_params_dir
+
+    save_path = str(feature_maps_dir / f"{name}.png")
+    # imencode + tofile вместо cv2.imwrite — работает с любыми путями
+    cv2.imencode(".png", warped_bgr)[1].tofile(save_path)
+
+    cn = cfg.generation["controlnet"]
+    controlnet_input = {
+        "control_weight":        float(cn["weight"]),
+        "starting_control_step": float(cn["start"]),
+        "ending_control_step":   float(cn["end"]),
+        "feature_map_dir":       save_path,
+        "text_promt":            prompt,
+        "negative_promt":        neg_prompt,
+    }
+    with open(prompt_params_dir / f"{name}.json", "w") as f:
+        json.dump(controlnet_input, f, indent=4)
+
+    return controlnet_input
+
+
+def warp_image(image_path: str, exageration_strength: Optional[float] = None) -> np.ndarray:
+    """Варп-деформация для эндпоинта /warp. Возвращает BGR numpy array."""
+    from .config import get_config
+    cfg      = get_config()
+    strength = exageration_strength if exageration_strength is not None else cfg.warp_strength
+
+    # Безопасное чтение через numpy — работает с любыми путями на Windows
+    buf   = np.fromfile(image_path, dtype=np.uint8)
+    image = cv2.imdecode(buf, cv2.IMREAD_COLOR)
+    if image is None:
+        raise ValueError(f"Не удалось декодировать изображение: '{image_path}'")
+
+    h, w = image.shape[:2]
+
+    p = str(cfg.mean_face_path)
+    if not os.path.exists(p):
+        raise FileNotFoundError(f"Не найден файл статистики: {p}")
+
+    aggregator = MediaPipeFaceAggregator(mean_face_path=p)
+    groups     = get_canonical_groups()
+    params     = get_caricature_parameters(aggregator, groups, image_path, strength=strength)
+    warped_img = aggregator.warp_face(
+        image_path,
+        caricature_params=params,
+        target_size=(h, w),
+    )
+
+    return cv2.cvtColor(warped_img, cv2.COLOR_RGB2BGR)
